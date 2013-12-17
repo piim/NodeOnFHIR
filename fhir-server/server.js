@@ -105,9 +105,17 @@ var SubstanceSchema = new Schema({entry:{content:{Substance:{}}}});
 mongoose.model('Substance', SubstanceSchema);
 var SubstanceMongooseModel = mongoose.model('Substance');
 
+var TrackerStatementSchema = new Schema({entry:{content:{TrackerStatement:{}}}});
+mongoose.model('Other', TrackerStatementSchema);
+var TrackerStatementMongooseModel = mongoose.model('Other');
+
 var UserSchema = new Schema({entry:{content:{User:{}}}});
 mongoose.model('User', UserSchema);
 var UserMongooseModel = mongoose.model('User');
+
+var VitalStatementSchema = new Schema({entry:{content:{VitalStatement:{}}}});
+mongoose.model('Other', VitalStatementSchema);
+var VitalStatementMongooseModel = mongoose.model('Other');
 
 var format_fhir = function (entries) {
     //TODO put JSON definition of the document junk here
@@ -533,6 +541,8 @@ mongodbServer.get('/organization/history', function(req, res, next){return getRe
 mongodbServer.get('/patient/history', function(req, res, next){return getResourceHistory(req, res, next, PatientMongooseModel, 'Patient');});
 mongodbServer.get('/practitioner/history', function(req, res, next){return getResourceHistory(req, res, next, PractitionerMongooseModel, 'Practitioner');});
 mongodbServer.get('/substance/history', function(req, res, next){return getResourceHistory(req, res, next, SubstanceMongooseModel, 'Substance');});
+mongodbServer.get('/trackerstatement/history', function(req, res, next){return getResourceHistory(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
+mongodbServer.get('/vitalstatement/history', function(req, res, next){return getResourceHistory(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
 
 //	write new records
 mongodbServer.put(/^\/medication\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return putResource(req, res, next, MedicationMongooseModel, 'Medication');});
@@ -542,7 +552,9 @@ mongodbServer.put(/^\/observation\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, nex
 mongodbServer.put(/^\/organization\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return putResource(req, res, next, OrganizationMongooseModel, 'Organization');});
 mongodbServer.put(/^\/patient\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return putResource(req, res, next, PatientMongooseModel, 'Patient');});
 mongodbServer.put(/^\/practitioner\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return putResource(req, res, next, PractitionerMongooseModel, 'Practitioner');});
+mongodbServer.put(/^\/trackerstatement\/@([a-zA-Z0-9_\.~-]+)/,  function(req, res, next){return putResource(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
 mongodbServer.put('/^\/user\/@([a-zA-Z0-9_\.~-]+)/', function(req, res, next){return putUser(req, res, next);});
+mongodbServer.put(/^\/vitalstatement\/@([a-zA-Z0-9_\.~-]+)/,  function(req, res, next){return putResource(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
 mongodbServer.put('/medication', function(req, res, next){return putResource(req, res, next, MedicationMongooseModel, 'Medication');});
 mongodbServer.put('/medicationadministration',  function(req, res, next){return putResource(req, res, next, MedicationAdministrationMongooseModel, 'MedicationAdministration');});
 mongodbServer.put('/medicationstatement', function(req, res, next){return putResource(req, res, next, MedicationStatementMongooseModel, 'MedicationStatement');});
@@ -550,7 +562,9 @@ mongodbServer.put('/observation', function(req, res, next){return putResource(re
 mongodbServer.put('/organization', function(req, res, next){return putResource(req, res, next, OrganizationMongooseModel, 'Organization');});
 mongodbServer.put('/patient', function(req, res, next){return putResource(req, res, next, PatientMongooseModel, 'Patient');});
 mongodbServer.put('/practitioner', function(req, res, next){return putResource(req, res, next, PractitionerMongooseModel, 'Practitioner');});
+mongodbServer.put('/trackerstatement', function(req, res, next){return putResource(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
 mongodbServer.put('/user', function(req, res, next){return putUser(req, res, next);});
+mongodbServer.put('/vitalstatement', function(req, res, next){return putResource(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
 
 //	search
 mongodbServer.get('/medication/search', function(req,res,next) {
@@ -619,6 +633,14 @@ mongodbServer.get('/practitioner/search', function(req,res,next) {
             ]
         );
 });
+mongodbServer.get('/trackerstatement/search', function(req,res,next) {
+    return searchResourceParams(
+            req,res,next,TrackerStatementMongooseModel,'TrackerStatement',
+            [
+             {id:"subject",field:"author.reference.value",search:[{prefix:'patient/@'}]}
+            ]
+    );
+});
 mongodbServer.get('/user/search', function(req,res,next) {
     return searchResourceParams(
             req,res,next,UserMongooseModel,'User',
@@ -626,6 +648,14 @@ mongodbServer.get('/user/search', function(req,res,next) {
              {id:"username",search:[{field:"login.value"}]}
             ]
         );
+});
+mongodbServer.get('/vitalstatement/search', function(req,res,next) {
+    return searchResourceParams(
+            req,res,next,VitalStatementMongooseModel,'VitalStatement',
+            [
+             {id:"subject",field:"author.reference.value",search:[{prefix:'patient/@'}]}
+            ]
+    );
 });
 
 //	find specific records
@@ -637,10 +667,14 @@ mongodbServer.get(/^\/organization\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, ne
 mongodbServer.get(/^\/patient\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return searchResource(req, res, next, PatientMongooseModel, 'Patient');});
 mongodbServer.get(/^\/practitioner\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return searchResource(req, res, next, PractitionerMongooseModel, 'Practitioner');});
 mongodbServer.get(/^\/substance\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return searchResource(req, res, next, SubstanceMongooseModel, 'Substance');});
+mongodbServer.get(/^\/trackerstatement\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return searchResource(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
+mongodbServer.get(/^\/vitalstatement\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return searchResource(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
 
 //	delete
 mongodbServer.del(/^\/medicationadministration\/delete\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return deleteResource(req, res, next, MedicationAdministrationMongooseModel, 'MedicationAdministration');});
 mongodbServer.del(/^\/medicationstatement\/delete\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return deleteResource(req, res, next, MedicationStatementMongooseModel, 'MedicationStatement');});
+mongodbServer.del(/^\/trackerstatement\/delete\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return deleteResource(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
+mongodbServer.del(/^\/vitalstatement\/delete\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return deleteResource(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
 
 //	recieve record dumps
 //  (corresponds to resources listed in test_data/load.sh import script)
