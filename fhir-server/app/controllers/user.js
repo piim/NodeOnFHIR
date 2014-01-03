@@ -29,10 +29,10 @@ if( config.authenticate )
 	                var response = {user:user};
 	                var token = jwt.encode({id: data[0]._id}, config.authentication_secret);
 	                
-	                setSession(user,token);
-	                
+	                response.id = data[0]._id;
 	                response.token = token;
 	                
+	                var session = setSession(user,token);
 	                res.send(response);
 	            } else
 	                res.send(404, 'Not found');
@@ -49,6 +49,8 @@ if( config.authenticate )
         
     	var query = {token:token};
     	
+    	console.log( request );
+    	
     	Session.findOne(query).execFind
         (
         	function (arr, data) 
@@ -63,26 +65,7 @@ if( config.authenticate )
                     	res.send(404, 'Not found');
                     }
                     
-                    var query = {_id:session.user};
-                    
-                    User.findOne(query).execFind
-                    (
-                    	function (arr, data) 
-                    	{
-                            if (data && data.length) 
-                            {
-                            	var response = {user:data[0]};
-                            	
-                            	response.token = session.token;
-                            	
-                                res.send(response);
-                            } 
-                            else
-                            {
-                            	res.send(404, 'Not found');
-                            } 
-                    	}
-                    );
+                    res.send(session);
                 } 
                 else
                 {
@@ -163,7 +146,7 @@ if( config.authenticate )
             				{
             					res.send(user);
             				}
-            			);
+            			)
             		}
             	}
             );
@@ -189,7 +172,7 @@ var setSession = function(user,token)
     var expires = new Date();
     expires.setTime( expires.getTime() + (minute*5) );
     
-    var query = {user:user._id};
+    var query = {user:user.id};
     
 	Session.findOne(query).execFind
     (
@@ -202,10 +185,8 @@ var setSession = function(user,token)
     	}
     );
 	
-	console.log( 'session expires at', expires );
-	
 	var session = new Session();
-	session.user = user._id;
+	session.user = user;
 	session.expires = expires;
 	session.token = token;
 	session.save();
