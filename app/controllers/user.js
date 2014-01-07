@@ -57,13 +57,15 @@ if( config.authenticate )
                 {
                     var session = data[0];
                     
-                    if( session.expires.getTime() > Date.now )
+                    if( session.expires.getTime() > Date.now || !session.user )
                     {
                     	session.remove();
                     	res.send(404, 'Not found');
                     }
-                    
-                    res.send(session);
+                    else
+                    {
+                    	res.send(session);
+                    }
                 } 
                 else
                 {

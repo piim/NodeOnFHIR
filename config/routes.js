@@ -152,12 +152,12 @@ module.exports = function(server)
 
 	//		recieve record dumps
 	//  (corresponds to resources listed in test_data/load.sh import script)
-	server.post('/medicationDump', function(req, res, next){return postDump(req,res,next,MedicationMongooseModel,'Medication');});
-	server.post('/observationDump', function(req, res, next){return postDump(req,res,next,ObservationMongooseModel,'Observation');});
-	server.post('/organizationDump', function(req, res, next){return postDump(req,res,next,OrganizationMongooseModel,'Organization');});
-	server.post('/patientDump', function(req, res, next){return postDump(req,res,next,PatientMongooseModel,'Patient');});
-	server.post('/practitionerDump', function(req, res, next){return postDump(req,res,next,PractitionerMongooseModel,'Practitioner');});
-	server.post('/substanceDump', function(req, res, next){return postDump(req,res,next,SubstanceMongooseModel,'Substance');});
+	server.post('/medicationDump', function(req, res, next){return fhir.postDump(req,res,next,MedicationMongooseModel,'Medication');});
+	server.post('/observationDump', function(req, res, next){return fhir.postDump(req,res,next,ObservationMongooseModel,'Observation');});
+	server.post('/organizationDump', function(req, res, next){return fhir.postDump(req,res,next,OrganizationMongooseModel,'Organization');});
+	server.post('/patientDump', function(req, res, next){return fhir.postDump(req,res,next,PatientMongooseModel,'Patient');});
+	server.post('/practitionerDump', function(req, res, next){return fhir.postDump(req,res,next,PractitionerMongooseModel,'Practitioner');});
+	server.post('/substanceDump', function(req, res, next){return fhir.postDump(req,res,next,SubstanceMongooseModel,'Substance');});
 
 	//		user authentication
 	if( config.authenticate )
