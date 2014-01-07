@@ -17,6 +17,8 @@ var UserSchema = new Schema
 	}
 );
 
+mongoose.model('User', UserSchema);
+
 var SessionSchema = new Schema
 (
 	{
@@ -29,5 +31,4 @@ var SessionSchema = new Schema
 	}
 );
 
-mongoose.model('User', UserSchema);
 mongoose.model('Session', SessionSchema);
