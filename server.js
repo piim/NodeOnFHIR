@@ -6,11 +6,6 @@ var jwt = require('jwt-simple');
 
 var config = require('./config/config');
 
-var local_port = 8888;
-
-//Hopefully this is never used in production, but (god forbid) you can change this.... walk with god.
-var root_url = 'http://localhost:' + local_port;
-var replace_url = "http://hl7connect.healthintersections.com.au/svc/fhir";
 var mongo_uri = (process.env.PORT) ? config.creds.mongoose_auth_jitsu : config.creds.mongoose_auth_local;
 
 var db = mongoose.connect(mongo_uri);
@@ -72,7 +67,7 @@ require('./app/models/fhir');
 require('./app/models/user');
 require('./config/routes')(server);
 
-server.listen(local_port, function () {
-	var consoleMessage = '\n Simple Fhir server api: port ' + local_port;
+server.listen(config.local_port, function () {
+	var consoleMessage = '\n Simple Fhir server api: port ' + config.local_port;
     console.log(consoleMessage, server.name, server.url);
 });

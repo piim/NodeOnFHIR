@@ -2,6 +2,9 @@ var jwt = require('jwt-simple'),
 	model = require('../models/fhir'),
 	config = require('../../config/config');
 
+//Hopefully this is never used in production, but (god forbid) you can change this.... walk with god.
+var root_url = 'http://localhost:' + config.local_port;
+
 /**
  * Searches a resource (by title only)
  * 
