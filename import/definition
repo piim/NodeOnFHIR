@@ -1,0 +1,214 @@
+list=[
+	{
+		"type":"vital",
+		"label":"Weight", 
+		"actionLabel": "I weighed",
+		"unit": "pounds", 
+		"code":"3141-9",
+		"codeName":"Body weight Measured",
+		"codeURI":"http://loinc.org",
+		"components":
+			[
+				{
+					"inputType":"range",
+					"min":50,
+					"max":500
+				}
+			 ],
+		"chart": { "style":"line","allowPointSelect":true,"markerEnabled":true }
+	},
+	{
+		"type":"vital",
+		"label":"Blood Pressure", 
+		"actionLabel": "My blood pressure was",
+		"unit": "mmHg", 
+		"code":"55284-4",
+		"codeName":"Blood pressure systolic and diastolic",
+		"codeURI":"http://loinc.org",
+		"components":
+			[
+				{
+					"label":"Systolic",
+					"inputType":"text",
+					"code":"8480-6",
+					"codeName":"Systolic blood pressure",
+					"codeURI":"http://loinc.org",
+				},
+				{
+					"label":"Diastolic",
+					"inputType":"text",
+					"code":"8462-4",
+					"codeName":"Diastolic blood pressure",
+					"codeURI":"http://loinc.org",
+				}
+			],
+		"chart": { "style":"arearange","allowPointSelect":true }
+	},
+	{
+		"type":"vital",
+		"label":"Heart Rate", 
+		"actionLabel": "My heart rate was",
+		"unit": "beats/min", 
+		"code":"8867-4",
+		"codeName":"Heart rate",
+		"codeURI":"http://loinc.org",
+		"components":
+			[
+				{
+					"inputType":"range",
+					"min":60,
+					"max":100,
+					"step":"1"
+				}
+			 ],
+		"chart": { "style":"line","allowPointSelect":"false" }
+	},
+	{
+		"type":"vital",
+		"label":"Respiratory Rate", 
+		"actionLabel": "My respiratory rate was", 
+		"unit": "breaths/min", 
+		"code":"9279-1",
+		"codeName":"Respiratory rate",
+		"codeURI":"http://loinc.org",
+		"components":
+			[
+				{
+					"inputType":"range",
+					"min":"10",
+					"max":"60",
+					"step":"1"
+				}
+			 ],
+		"chart": { "style":"line","allowPointSelect":"false" }
+	},
+	{
+		"type":"vital",
+		"label":"Temperature", 
+		"actionLabel": "My temperature was", 
+		"unit": "degrees Fahrenheit", 
+		"code":"8310-5",
+		"codeName":"Body temperature",
+		"codeURI":"http://loinc.org",
+		"components":
+			[
+				{
+					"inputType":"range",
+					"min":95,
+					"max":105,
+					"step":".1"
+				}
+			 ],
+		"chart": { "style":"line","allowPointSelect":"false" }
+	},
+	{
+		"type":"custom",
+		"label":"driving",
+		"actionLabel": "I drove for", 
+		"unit":"hour",
+		"unitLabel":"hours",
+		"value":0,
+		"code":"129060000",
+		"codeName":"Driving (observable entity)",
+		"codeURI":"http://snomed.info"
+	},
+	{
+		"type":"custom",
+		"label":"exercising",
+		"actionLabel": "I exercised for", 
+		"unit":"hour",
+		"value":1,
+		"unitLabel":"hours",
+		"components":
+			[
+				{
+					"label":"Passive exercise",
+					"code":"7934008",
+					"codeName":"Passive physical exercise (observable entity)",
+					"codeURI":"http://snomed.info"
+				},
+				{
+					"label":"Isometric exercise",
+					"code":"35360009",
+					"codeName":"Isometric physical exercise (observable entity)",
+					"codeURI":"http://snomed.info"
+				},
+				{
+					"label":"Strenuous exercise",
+					"code":"86047003",
+					"codeName":"Active physical exercise (observable entity)",
+					"codeURI":"http://snomed.info"
+				}
+			 ]
+	},
+	{
+		"type":"custom",
+		"label":"Reading",
+		"actionLabel": "I read for", 
+		"unit":"hour",
+		"unitLabel":"hours",
+		"code":"50360004",
+		"codeName":"Reading (observable entity)",
+		"codeURI":"http://snomed.info"
+	},
+	{
+		"type":"custom",
+		"label":"Engaging in sexual activity",
+		"actionLabel": "I had sex for", 
+		"unit":"hour",
+		"unitLabel":"hours",
+		"code":"364316005",
+		"codeName":"Sexual intercourse observable (observable entity)",
+		"codeURI":"http://snomed.info"
+	},
+	{
+		"type":"custom",
+		"label":"Singing",
+		"actionLabel": "I sang for", 
+		"unit":"hour",
+		"unitLabel":"hours",
+		"code":"57206007",
+		"codeName":"Singing (observable entity)",
+		"codeURI":"http://snomed.info"
+	},
+	{
+		"type":"custom",
+		"label":"Shopping",
+		"actionLabel": "I shopped for", 
+		"unit":"hour",
+		"unitLabel":"hours",
+		"code":"129011005",
+		"codeName":"Shopping (observable entity)",
+		"codeURI":"http://snomed.info"
+	},
+	{
+		"type":"custom",
+		"label":"Sleeping",
+		"actionLabel": "I slept for", 
+		"unit":"hour",
+		"unitLabel":"hours",value:0,
+		"code":"258158006",
+		"codeName":"Sleep, function (observable entity)",
+		"codeURI":"http://snomed.info"
+	},
+	{
+		"type":"custom",
+		"label":"Talking about feelings",
+		"actionLabel": "I talked about my feelings", 
+		"unit":"hour",
+		"unitLabel":"hours",
+		"code":"288544007",
+		"codeName":"Communicating feelings, function (observable entity)",
+		"codeURI":"http://snomed.info"
+	},
+	{
+		"type":"custom",
+		"label":"Using telephone",
+		"actionLabel": "I used the phone", 
+		"unit":"hour",
+		"unitLabel":"hours",
+		"code":"129013008",
+		"codeName":"Using telephone (observable entity)",
+		"codeURI":"http://snomed.info"
+	}
+]
