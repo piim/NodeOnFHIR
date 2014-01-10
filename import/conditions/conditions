@@ -1,0 +1,21 @@
+list=
+[
+	{
+		"name":"Hypertension",
+		"vitals":
+		[
+			{"comment":"Blood Pressure","code":"55284-4"},
+			{"comment":"Weight","code":"3141-9"},
+		],
+		"customs":
+		[
+			{"comment":"Strenuous Exercise","code":"86047003"},
+			{"comment":"Sleeping","code":"258158006"}
+		],
+		"medications":
+		[
+			{"comment":"Aspirin","code":"0904-2009"}
+		]
+	}
+
+]

@@ -1,6 +1,8 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+	url = require('url');
 
-var Definition = mongoose.model('Definition');
+var Condition = mongoose.model('Condition'),
+	Definition = mongoose.model('Definition');
 
 exports.search = function(req, res, next) 
 {
@@ -10,22 +12,18 @@ exports.search = function(req, res, next)
 	var params = req.params;
     
 	var query = {};
-
-	if( params.type ) query['type'] = params.type;
-	if( params.label ) query['label'] = params.label;
 	
-	Definition.find(query).exec
+	if( params.name ) query['name'] = params.name;
+	
+	Condition.find(query).populate('vitals medications customs').exec
     (
     	function (arr, data) 
     	{
             if (data && data.length) 
             {
             	var entries = [];
-            	
-            	for(var d in data)
-            		entries.push( new Definition(data[d]).toJSON({virtuals: true}) );
-            	
-                res.send( entries );
+
+                res.send( JSON.stringify(data) );
             } 
             else
             {

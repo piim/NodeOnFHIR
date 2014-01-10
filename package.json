@@ -9,11 +9,10 @@
     "node": "0.8.x"
   },
   "dependencies": {
-    "restify": "1.4.x",
-    "mongoose": "2.6.x",
-    "connect": "2.7.4",
+    "restify": "latest",
+    "mongoose": "latest",
+    "connect": "latest",
     "crypto": "latest",
-    "jwt-simple": "latest",
-    "url": "latest"
+    "jwt-simple": "latest"
   }
 }

@@ -11,31 +11,36 @@ if( config.authenticate )
     exports.postAuthenticate = function (req, res, next) 
     {
         if ('OPTIONS' == req.method)
-            res.send(203, 'OK');
+        {
+        	res.statusCode = 203;
+        	res.send('OK');
+        }
         
-        var request = JSON.parse(req.body);
-        var username = request.username;
-        var password = request.password;
-
+        var username = req.body.username;
+        var password = req.body.password;
         query = { "username": username, "password": encrypt(password) };
         
-        User.findOne(query).execFind
+        User.findOne(query).exec
         (
         	function (arr, data) 
         	{
-	            if (data.length) 
+	            if ( data ) 
 	            {
-	                var user = data[0];
+	                var user = data;
 	                var response = {user:user};
-	                var token = jwt.encode({id: data[0]._id}, config.authentication_secret);
+	                var token = jwt.encode({id: user._id}, config.authentication_secret);
 	                
-	                response.id = data[0]._id;
+	                response.id = user._id;
 	                response.token = token;
 	                
 	                var session = setSession(user,token);
 	                res.send(response);
-	            } else
-	                res.send(404, 'Not found');
+	            } 
+	            else
+	            {
+	            	res.statusCode = 404;
+	            	res.send('Not found');
+	            }
         });
     };
     
@@ -72,25 +77,28 @@ if( config.authenticate )
     exports.getSession = function(req, res, next) 
     {
     	if ('OPTIONS' == req.method) 
-    		 res.send(203, 'OK');
-    	 
-    	var request = JSON.parse(req.body);
-        var token = request.token;
-        
-    	var query = {token:token};
+    	{
+    		res.statusCode = 203;
+    		res.send('OK');
+    	}
     	
-    	Session.findOne(query).populate('user').execFind
+    	console.log( req.body )
+    	var query = {token:req.body.token};
+    	
+    	Session.findOne(query).populate('user').exec
         (
         	function (arr, data) 
         	{
-                if (data && data.length) 
+                if (data) 
                 {
-                    var session = data[0];
+                    var session = data;
                     
                     if( session.expires.getTime() > Date.now || !session.user )
                     {
                     	session.remove();
-                    	res.send(404, 'Not found');
+                    	
+                    	res.statusCode = 404;
+    	            	res.send('Not found');
                     }
                     else
                     {
@@ -99,7 +107,8 @@ if( config.authenticate )
                 } 
                 else
                 {
-                	res.send(404, 'Not found');
+                	res.statusCode = 404;
+	            	res.send('Not found');
                 } 
         	}
         );
@@ -108,19 +117,20 @@ if( config.authenticate )
     exports.getUser = function(req, res, next) 
     {
     	if ('OPTIONS' == req.method) 
-    		 res.send(203, 'OK');
+    	{
+    		res.statusCode = 203;
+    		res.send('OK');
+    	}
     	
-    	var params = url.parse(req.url,true).query;
-        
     	var query = {};
     	
-    	if( params.id ) 
-    		query['_id'] = params.id;
+    	if( req.query.id ) 
+    		query['_id'] = req.query.id;
     	
-    	if( params.username ) 
-    		query['username'] = params.username;
+    	if( req.query.username ) 
+    		query['username'] = req.query.username;
     	
-    	Session.findOne(query).execFind
+    	Session.findOne(query).exec
         (
         	function (arr, data) 
         	{
@@ -130,7 +140,8 @@ if( config.authenticate )
                 } 
                 else
                 {
-                	res.send(404, 'Not found');
+                	res.statusCode = 404;
+	            	res.send('Not found');
                 } 
         	}
         );
@@ -138,13 +149,14 @@ if( config.authenticate )
 
     exports.putUser = function (req, res, next) 
     {
-        if ('OPTIONS' == req.method) 
-            res.send(203, 'OK');
+    	if ('OPTIONS' == req.method) 
+    	{
+    		res.statusCode = 203;
+    		res.send('OK');
+    	}
         
         var data = JSON.parse(req.body);
         data.password = encrypt(data.password);
-        
-        console.log( 'putUser', data );
         
         var user = new User();
     	user.nameFirst = data.name_first;
@@ -204,23 +216,31 @@ var setSession = function(user,token)
     
     var query = {user:user.id};
     
-	Session.findOne(query).execFind
+	Session.findOne(query).exec
     (
     	function (arr, data) 
     	{
-            if (data.length) 
+            if (data) 
             {
-                data[0].remove();
+                data.remove();
             }
     	}
     );
 	
 	var session = new Session();
-	session.user = user;
+	session.user = user._id;
 	session.expires = expires;
 	session.token = token;
-	session.save();
+	session.save
+	(
+		function(err)
+		{
+			if( err )
+				console.log(err);
+		}
+	);
 	
+	console.log( session )
 	return session;
 };
 
