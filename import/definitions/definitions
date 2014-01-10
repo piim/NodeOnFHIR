@@ -1,4 +1,5 @@
-list=[
+list=
+[
 	{
 		"type":"vital",
 		"label":"Weight", 
@@ -114,33 +115,38 @@ list=[
 	},
 	{
 		"type":"custom",
-		"label":"exercising",
+		"label":"Passive exercise",
 		"actionLabel": "I exercised for", 
 		"unit":"hour",
-		"value":1,
 		"unitLabel":"hours",
-		"components":
-			[
-				{
-					"label":"Passive exercise",
-					"code":"7934008",
-					"codeName":"Passive physical exercise (observable entity)",
-					"codeURI":"http://snomed.info"
-				},
-				{
-					"label":"Isometric exercise",
-					"code":"35360009",
-					"codeName":"Isometric physical exercise (observable entity)",
-					"codeURI":"http://snomed.info"
-				},
-				{
-					"label":"Strenuous exercise",
-					"code":"86047003",
-					"codeName":"Active physical exercise (observable entity)",
-					"codeURI":"http://snomed.info"
-				}
-			 ]
+		"value":0,
+		"code":"7934008",
+		"codeName":"Passive physical exercise (observable entity)",
+		"codeURI":"http://snomed.info"
 	},
+	{
+		"type":"custom",
+		"label":"Isometric exercise",
+		"actionLabel": "I exercised for", 
+		"unit":"hour",
+		"unitLabel":"hours",
+		"value":0,
+		"code":"35360009",
+		"codeName":"Isometric physical exercise (observable entity)",
+		"codeURI":"http://snomed.info"
+	},
+	{
+		"type":"custom",
+		"label":"Strenuous exercise",
+		"actionLabel": "I exercised for", 
+		"unit":"hour",
+		"unitLabel":"hours",
+		"value":0,
+		"code":"86047003",
+		"codeName":"Active physical exercise (observable entity)",
+		"codeURI":"http://snomed.info"
+	},
+	
 	{
 		"type":"custom",
 		"label":"Reading",

@@ -24,12 +24,13 @@ exports.searchResource = function (req, res, next, model, resourceId) {
     
     model.find({
         "entry.title": new RegExp('^' + resourceId + '.*' + req.params[0])
-    }).execFind(function (arr, data) {
+    }).exec(function (arr, data) {
         if (data.length > 0) {
             data[0].entry.published = new Date().toISOString();
             res.send(data[0]);
         } else {
-            res.send(404, 'Not found');
+        	res.statusCode = 404;
+            res.send('Not found');
         }
     });
 };
@@ -58,7 +59,8 @@ exports.searchResourceParams = function (req, res, next, model, resourceId, quer
 	ownerIdPath = ownerIdPath.replace( /{{resourceId}}/, resourceId);
 	
     if ('OPTIONS' == req.method) {
-        res.send(203, 'OK');
+    	res.statusCode = 203;
+        res.send('OK');
     }
 
     console.log("searchResourceParams", resourceId, req.params[0], ownerIdPath);
@@ -78,7 +80,8 @@ exports.searchResourceParams = function (req, res, next, model, resourceId, quer
         }
         else
         {
-            res.send(401,"Unauthorized");
+        	res.statusCode = 401;
+            res.send("Unauthorized");
         }
     }
     
@@ -86,8 +89,7 @@ exports.searchResourceParams = function (req, res, next, model, resourceId, quer
     
     if( req.method == "GET" )
     {
-        var url = require('url');
-        params = url.parse(req.url, true).query;
+        params = req.params;
         
         //  trim quotes from parameters
         for (key in params)
@@ -165,19 +167,22 @@ exports.searchResourceParams = function (req, res, next, model, resourceId, quer
 exports.deleteResource = function (req, res, next, model, resourceId) {
 
     if ('OPTIONS' == req.method) {
-        res.send(203, 'OK');
+    	res.statusCode = 203;
+        res.send('OK');
     }
 
-    console.log("deleteResource", resourceId, req.params[0]);
+    console.log("deleteResource", resourceId, req.params);
 
     model.find({
         "entry.title": new RegExp('^' + resourceId + '.*' + req.params[0])
-    }).execFind(function (arr, data) {
+    }).exec(function (arr, data) {
         if (data.length > 0) {
             data[0].remove();
-            res.send(204,'No content');
+            res.statusCode = 204;
+            res.send('No content');
         } else {
-            res.send(404, 'Not found');
+        	res.statusCode = 404;
+        	res.send('Not found');
         }
     });
 };
@@ -203,7 +208,7 @@ exports.getResourceHistory = function (req, res, next, model, resourceId) {
 
     model.find({
         "entry.title": new RegExp('^' + resourceId)
-    }).execFind(function (arr, data) {
+    }).exec(function (arr, data) {
         res.send(formatFhir(data));
     });
 };
@@ -243,12 +248,13 @@ exports.putResource = function (req, res, next, model, resourceId) {
         res.send(203, 'OK');
     }
 
-    var resource = JSON.parse(req.body);
-
+    var resource = req.body;
+    console.log( resource );
+    
     if (req.params && req.params[0]) {
         model.find({
             "entry.title": new RegExp('^' + resourceId + '.*' + req.params[0])
-        }).execFind(function (arr, data) {
+        }).exec(function (arr, data) {
             if (data.length > 0) {
                 updateData(req.params[0], resource, data[0], req.connection.remoteAddress, res, model);
             } else {

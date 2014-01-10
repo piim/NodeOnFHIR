@@ -14,8 +14,8 @@ var mongoose = require('mongoose'),
 
 module.exports = function(server)
 {
+	//	FHIR
 	var fhir = require('../app/controllers/fhir');
-	
 	//	get all records
 	server.get('/medication/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, MedicationMongooseModel, 'Medication');});
 	server.get('/medicationadministration/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, MedicationAdministrationMongooseModel, 'MedicationStatement');});
@@ -27,8 +27,7 @@ module.exports = function(server)
 	server.get('/substance/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, SubstanceMongooseModel, 'Substance');});
 	server.get('/trackerstatement/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
 	server.get('/vitalstatement/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
-
-	//		write new records
+	//	write new records
 	server.put(/^\/medication\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.putResource(req, res, next, MedicationMongooseModel, 'Medication');});
 	server.put(/^\/medicationadministration\/@([a-zA-Z0-9_\.~-]+)/,  function(req, res, next){return fhir.putResource(req, res, next, MedicationAdministrationMongooseModel, 'MedicationAdministration');});
 	server.put(/^\/medicationstatement\/@([a-zA-Z0-9_\.~-]+)/,  function(req, res, next){return fhir.putResource(req, res, next, MedicationStatementMongooseModel, 'MedicationStatement');});
@@ -47,13 +46,13 @@ module.exports = function(server)
 	server.put('/practitioner', function(req, res, next){return fhir.putResource(req, res, next, PractitionerMongooseModel, 'Practitioner');});
 	server.put('/trackerstatement', function(req, res, next){return fhir.putResource(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
 	server.put('/vitalstatement', function(req, res, next){return fhir.putResource(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
-
-	//		search
+	//	search
 	server.get('/medication/search', function(req,res,next) {
 	    return fhir.searchResourceParams(
 	                req,res,next,MedicationMongooseModel,'Medication',
 	                [
-	                 {id:"name",field:"name.value",search:[{regex:'^{{value}}.*'},{prefix:''}]}
+	                 {id:"name",field:"name.value",search:[{regex:'^{{value}}.*'},{prefix:''}]},
+	                 {id:"code",field:"code.coding.code.value",search:[{regex:'{{value}}',flags:'i'}]}
 	                ]
 	            );
 	});
@@ -73,7 +72,6 @@ module.exports = function(server)
 	            ]
 	    );
 	});
-	 
 	server.get('/observation/search', function(req,res,next) {
 	    return fhir.searchResourceParams(
 	            req,res,next,ObservationMongooseModel,'Observation',
@@ -131,8 +129,7 @@ module.exports = function(server)
 	            ]
 	    );
 	});
-
-	//		find specific records
+	//	find specific records
 	server.get(/^\/medication\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.searchResource(req, res, next, MedicationMongooseModel, 'Medication');});
 	server.get(/^\/medicationadministration\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.searchResource(req, res, next, MedicationAdministrationMongooseModel, 'MedicationAdministration');});
 	server.get(/^\/medicationstatement\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.searchResource(req, res, next, MedicationStatementMongooseModel, 'MedicationStatement');});
@@ -143,14 +140,12 @@ module.exports = function(server)
 	server.get(/^\/substance\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.searchResource(req, res, next, SubstanceMongooseModel, 'Substance');});
 	server.get(/^\/trackerstatement\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.searchResource(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
 	server.get(/^\/vitalstatement\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.searchResource(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
-
-	//		delete
+	//	delete
 	server.del(/^\/medicationadministration\/delete\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.deleteResource(req, res, next, MedicationAdministrationMongooseModel, 'MedicationAdministration');});
 	server.del(/^\/medicationstatement\/delete\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.deleteResource(req, res, next, MedicationStatementMongooseModel, 'MedicationStatement');});
 	server.del(/^\/trackerstatement\/delete\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.deleteResource(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
 	server.del(/^\/vitalstatement\/delete\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.deleteResource(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
-
-	//		recieve record dumps
+	//	recieve record dumps
 	//  (corresponds to resources listed in test_data/load.sh import script)
 	server.post('/medicationDump', function(req, res, next){return fhir.postDump(req,res,next,MedicationMongooseModel,'Medication');});
 	server.post('/observationDump', function(req, res, next){return fhir.postDump(req,res,next,ObservationMongooseModel,'Observation');});
@@ -159,7 +154,8 @@ module.exports = function(server)
 	server.post('/practitionerDump', function(req, res, next){return fhir.postDump(req,res,next,PractitionerMongooseModel,'Practitioner');});
 	server.post('/substanceDump', function(req, res, next){return fhir.postDump(req,res,next,SubstanceMongooseModel,'Substance');});
 
-	//		user authentication
+	//	USER
+	//	user authentication
 	if( config.authenticate )
 	{
 		var user = require('../app/controllers/user');
@@ -171,7 +167,11 @@ module.exports = function(server)
 		server.get('/user/search', user.getUser);
 	}
 	
+	//	DEFINITION
 	var definition = require('../app/controllers/definition');
-	
 	server.get('/definition/search', definition.search);
+	
+	//	DEFINITION
+	var condition = require('../app/controllers/condition');
+	server.get('/condition/search', condition.search);
 }
