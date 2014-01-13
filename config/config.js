@@ -1,5 +1,5 @@
 exports.creds = {
-  mongoose_auth_local: 'mongodb://localhost/fhir_data',
+  mongoose_auth_local: 'mongodb://localhost/patient-tracker',
 };
 
 exports.local_port = 8888;
