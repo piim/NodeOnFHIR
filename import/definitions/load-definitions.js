@@ -2,6 +2,10 @@ var http = require('http');
 var fs = require('fs');
 var mongoose = require('mongoose');
 
+var config = require('../../config/config');
+var mongo_uri = (process.env.PORT) ? config.creds.mongoose_auth_jitsu : config.creds.mongoose_auth_local;
+var db = mongoose.connect(mongo_uri);
+
 require('../../app/models/fhir');
 require('../../app/models/definition');
 
