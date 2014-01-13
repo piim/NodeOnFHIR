@@ -232,7 +232,7 @@ exports.postDump = function (req, res, next, model, resourceId) {
 
     console.log("postDump", resourceId, req.body);
 
-    var entry = req.body.replace(new RegExp("{{hostname}}", 'g'), root_url);
+    var entry = JSON.stringify(req.body).replace(new RegExp("{{hostname}}", 'g'), root_url);
 
     // Create a new message model, fill it up and save it to Mongodb
     var item = new model();

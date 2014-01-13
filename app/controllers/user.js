@@ -155,7 +155,7 @@ if( config.authenticate )
     		res.send('OK');
     	}
         
-        var data = JSON.parse(req.body);
+        var data = req.body;
         data.password = encrypt(data.password);
         
         var user = new User();
