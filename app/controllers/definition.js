@@ -4,15 +4,18 @@ var Definition = mongoose.model('Definition');
 
 exports.search = function(req, res, next) 
 {
-	if ('OPTIONS' == req.method) 
-		 res.send(203, 'OK');
+	if ('OPTIONS' == req.method)
+	{
+		res.statusCode = 203;
+    	res.send('OK');
+	}
 	
 	var params = req.params;
     
 	var query = {};
 
 	if( params.type ) query['type'] = params.type;
-	if( params.label ) query['label'] = params.label;
+	if( params.label ) query['label'] = new RegExp('^' + params.label, 'i');
 	
 	Definition.find(query).exec
     (
@@ -25,11 +28,12 @@ exports.search = function(req, res, next)
             	for(var d in data)
             		entries.push( new Definition(data[d]).toJSON({virtuals: true}) );
             	
-                res.send( entries );
+                res.json( entries );
             } 
             else
             {
-            	res.send(404, 'Not found');
+            	res.statusCode = 404;
+            	res.send('Not found');
             } 
     	}
     );

@@ -1,19 +1,21 @@
 var mongoose = require('mongoose'),
 	url = require('url');
 
-var Condition = mongoose.model('Condition'),
-	Definition = mongoose.model('Definition');
+var Condition = mongoose.model('Condition');
 
 exports.search = function(req, res, next) 
 {
-	if ('OPTIONS' == req.method) 
-		 res.send(203, 'OK');
+	if ('OPTIONS' == req.method)
+	{
+		res.statusCode = 203;
+    	res.send('OK');
+	}
 	
 	var params = req.params;
-    
 	var query = {};
 	
-	if( params.name ) query['name'] = params.name;
+	if( params.name ) 
+		query['name'] = new RegExp('^' + params.name, 'i');
 	
 	Condition.find(query).populate('vitals medications customs').exec
     (
@@ -21,13 +23,12 @@ exports.search = function(req, res, next)
     	{
             if (data && data.length) 
             {
-            	var entries = [];
-
-                res.send( JSON.stringify(data) );
+            	res.json( data );
             } 
             else
             {
-            	res.send(404, 'Not found');
+            	res.statusCode = 404;
+            	res.send('Not found');
             } 
     	}
     );

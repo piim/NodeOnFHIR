@@ -16,23 +16,35 @@ var root_url = 'http://localhost:' + config.local_port;
  */
 exports.searchResource = function (req, res, next, model, resourceId) {
 
-    if ('OPTIONS' == req.method) {
-        res.send(203, 'OK');
+    if ('OPTIONS' == req.method) 
+    {
+    	res.statusCode = 203;
+        res.send('OK');
     }
     
     console.log("searchResource", resourceId, req.params[0]);
     
-    model.find({
-        "entry.title": new RegExp('^' + resourceId + '.*' + req.params[0])
-    }).exec(function (arr, data) {
-        if (data.length > 0) {
-            data[0].entry.published = new Date().toISOString();
-            res.send(data[0]);
-        } else {
-        	res.statusCode = 404;
-            res.send('Not found');
-        }
-    });
+    model.find
+    (
+    	{
+    		"entry.title": new RegExp('^' + resourceId + '.*' + req.params[0])
+    	}
+    )
+    .exec
+    (
+    	function (arr, data) 
+    	{
+	        if (data.length > 0) 
+	        {
+	            data[0].entry.published = new Date().toISOString();
+	            res.json( data[0] );
+	        } else 
+	        {
+	        	res.statusCode = 404;
+	            res.send('Not found');
+	        }
+	    }
+    );
 };
 
 /**
@@ -53,12 +65,13 @@ exports.searchResource = function (req, res, next, model, resourceId) {
  *  }
  *  @ownerIdPath Path within schema to property specifying resource owner (String)
  */
-exports.searchResourceParams = function (req, res, next, model, resourceId, queryDefinitions, ownerIdPath) {
-
+exports.searchResourceParams = function (req, res, next, model, resourceId, queryDefinitions, ownerIdPath) 
+{
 	ownerIdPath = ownerIdPath || "entry.content.{{resourceId}}.patient.reference.value";
 	ownerIdPath = ownerIdPath.replace( /{{resourceId}}/, resourceId);
 	
-    if ('OPTIONS' == req.method) {
+    if ('OPTIONS' == req.method) 
+    {
     	res.statusCode = 203;
         res.send('OK');
     }
@@ -145,12 +158,23 @@ exports.searchResourceParams = function (req, res, next, model, resourceId, quer
     var entries = [];
     
     //  node crashes when collection length exceeds 1000, so stream
-    model.find(query).stream().on('data', function (data) {
-        entries.push(data);
-    }).on('close', function () {
-        if( res.statusCode != 401 )
-            res.send(formatFhir(entries));
-    });
+    model.find(query).stream().on
+    (
+    	'data', 
+    	function (data) 
+    	{
+    		entries.push(data);
+    	}
+    )
+	.on
+	(
+		'close', 
+		function () 
+		{
+			if( res.statusCode != 401 )
+				res.json( formatFhir(entries) );
+		}
+	);
 };
 
 /**
@@ -166,25 +190,36 @@ exports.searchResourceParams = function (req, res, next, model, resourceId, quer
  */
 exports.deleteResource = function (req, res, next, model, resourceId) {
 
-    if ('OPTIONS' == req.method) {
+    if ('OPTIONS' == req.method) 
+    {
     	res.statusCode = 203;
         res.send('OK');
     }
 
     console.log("deleteResource", resourceId, req.params);
 
-    model.find({
-        "entry.title": new RegExp('^' + resourceId + '.*' + req.params[0])
-    }).exec(function (arr, data) {
-        if (data.length > 0) {
-            data[0].remove();
-            res.statusCode = 204;
-            res.send('No content');
-        } else {
-        	res.statusCode = 404;
-        	res.send('Not found');
-        }
-    });
+    model.find
+    (
+    	{"entry.title": new RegExp('^' + resourceId + '.*' + req.params[0])}
+    )
+    .exec
+    (
+    	function (arr, data) 
+    	{
+	        if (data.length > 0) 
+	        {
+	            data[0].remove();
+	            
+	            res.statusCode = 204;
+	            res.send('No content');
+	        } 
+	        else 
+	        {
+	        	res.statusCode = 404;
+	        	res.send('Not found');
+	        }
+	    }
+    );
 };
 
 /**
@@ -206,11 +241,19 @@ exports.getResourceHistory = function (req, res, next, model, resourceId) {
 
     console.log("getResourceHistory", resourceId);
 
-    model.find({
-        "entry.title": new RegExp('^' + resourceId)
-    }).exec(function (arr, data) {
-        res.send(formatFhir(data));
-    });
+    model.find
+    (
+    	{
+    		"entry.title": new RegExp('^' + resourceId)
+    	}
+    )
+    .exec
+    (
+    	function (arr, data) 
+    	{
+    		res.json( formatFhir(data) );
+    	}
+    );
 };
 
 /**
@@ -224,12 +267,14 @@ exports.getResourceHistory = function (req, res, next, model, resourceId) {
  * 
  * @TODO deprecate for puts
  */
-exports.postDump = function (req, res, next, model, resourceId) {
-
-    if ('OPTIONS' == req.method) {
-        res.send(203, 'OK');
+exports.postDump = function (req, res, next, model, resourceId) 
+{
+    if ('OPTIONS' == req.method) 
+    {
+    	res.statusCode = 203;
+        res.send('OK');
     }
-
+    
     console.log("postDump", resourceId, req.body);
 
     var entry = JSON.stringify(req.body).replace(new RegExp("{{hostname}}", 'g'), root_url);
@@ -237,31 +282,51 @@ exports.postDump = function (req, res, next, model, resourceId) {
     // Create a new message model, fill it up and save it to Mongodb
     var item = new model();
     item.entry = JSON.parse(entry);
-    item.save(function () {
-        res.send(entry); //TODO, actual response code? How about validation?
-    });
+    item.save
+    (
+    	function () 
+    	{
+    		res.json(entry); //TODO, actual response code? How about validation?
+    	}
+    );
 };
 
-exports.putResource = function (req, res, next, model, resourceId) {
-
-    if ('OPTIONS' == req.method) {
-        res.send(203, 'OK');
+exports.putResource = function (req, res, next, model, resourceId) 
+{
+	if ('OPTIONS' == req.method) 
+    {
+    	res.statusCode = 203;
+        res.send('OK');
     }
 
     var resource = req.body;
     console.log( resource );
     
-    if (req.params && req.params[0]) {
-        model.find({
-            "entry.title": new RegExp('^' + resourceId + '.*' + req.params[0])
-        }).exec(function (arr, data) {
-            if (data.length > 0) {
-                updateData(req.params[0], resource, data[0], req.connection.remoteAddress, res, model);
-            } else {
-                newData(createUUID(), resource, req.connection.remoteAddress, res, model);
-            }
-        });
-    } else {
+    if (req.params && req.params[0]) 
+    {
+        model.find
+        (
+        	{
+        		"entry.title": new RegExp('^' + resourceId + '.*' + req.params[0])
+        	}
+        )
+        .exec
+        (
+        	function (arr, data) 
+        	{
+	            if (data.length > 0) 
+	            {
+	                updateData(req.params[0], resource, data[0], req.connection.remoteAddress, res, model);
+	            } 
+	            else 
+	            {
+	                newData(createUUID(), resource, req.connection.remoteAddress, res, model);
+	            }
+	        }
+        );
+    } 
+    else 
+    {
         newData(createUUID(), resource, req.connection.remoteAddress, res, model);
     };
 };
@@ -300,22 +365,31 @@ var updateData = function (uuid, data, message, remoteAddress, res, model)
     var item = new model();
     item.entry = message.entry;
 
-    model.remove({
-        "entry.title": new RegExp('^' + type + '.*' + uuid)
-    }, function (err) {
-        console.log(err);
-
-        item.entry.updated = new Date().toISOString();
-        item.entry.published = new Date().toISOString();
-        item.entry.content = data;
-        item.entry.author = [{
-            'name': remoteAddress
-        }];
-        item.entry.summary = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + data[type].text.div;
-        item.save(function () {
-            res.send(data); //TODO, actual response code? How about validation?
-        });
-    });
+    model.remove
+    (
+    	{
+    		"entry.title": new RegExp('^' + type + '.*' + uuid)
+    	}, 
+    	function (err) 
+    	{
+	        console.log(err);
+	
+	        item.entry.updated = new Date().toISOString();
+	        item.entry.published = new Date().toISOString();
+	        item.entry.content = data;
+	        item.entry.author = [{
+	            'name': remoteAddress
+	        }];
+	        item.entry.summary = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + data[type].text.div;
+	        item.save
+	        (
+	        	function () 
+	        	{
+	        		res.json(data); //TODO, actual response code? How about validation?
+	        	}
+	        );
+    	}
+    );
 };
 
 var newData = function (uuid, data, remoteAddress, res, model) 
@@ -347,9 +421,13 @@ var newData = function (uuid, data, remoteAddress, res, model)
     };
     
     item.entry = entry;
-    item.save(function () {
-        res.send(item); //TODO, actual response code? How about validation?
-    });
+    item.save
+    (
+    	function () 
+    	{
+    		res.json(item); //TODO, actual response code? How about validation?
+    	}
+    );
 };
 
 /**
