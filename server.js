@@ -16,9 +16,9 @@ var server = restify.createServer
 	{
 	    formatters: 
 	    {
-	        'application/json+fhir': function(req, res, body)
+	    	'application/json+fhir': function(req, res, body)
 	        {
-	            if(req.params.callback)
+	    		if(req.params && req.params.callback)
 	            {
 	                var callbackFunctionName = req.params.callback.replace(/[^A-Za-z0-9_\.]/g, '');
 	                return callbackFunctionName + "(" + JSON.stringify(body) + ");";
