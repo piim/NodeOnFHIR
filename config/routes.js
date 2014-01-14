@@ -167,8 +167,10 @@ module.exports = function(server)
 		server.put('/auth/user', user.putUser);
 		server.put('/auth/^\/user\/@([a-zA-Z0-9_\.~-]+)/', user.putUser);
 		server.post('/auth/login', user.postAuthenticate);
+		server.post('/auth/logout', user.logOut);
 		server.post('/auth/session', user.getSession);
 		server.get('/user/search', user.getUser);
+		
 	}
 	
 	var definition = require('../app/controllers/definition');

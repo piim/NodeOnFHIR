@@ -39,6 +39,36 @@ if( config.authenticate )
         });
     };
     
+    exports.logOut = function(req, res, next) 
+    {
+    	if ('OPTIONS' == req.method) 
+    		 res.send(203, 'OK');
+    	 
+    	var request = JSON.parse(req.body);
+        var token = req.header('token');
+        
+    	var query = {token:token};
+    	
+    	console.log("TOKEN ", token, "REQ ", req.body);
+    	
+    	Session.findOne(query).execFind
+        (
+        	function (arr, data) 
+        	{
+                if (data && data.length) 
+                {                	
+                	var session = data[0];
+                	session.remove();
+                	res.send(203, 'OK');              	                   
+                } 
+                else
+                {
+                	res.send(404, 'Not found');
+                } 
+        	}
+        );
+    };
+    
     exports.getSession = function(req, res, next) 
     {
     	if ('OPTIONS' == req.method) 
