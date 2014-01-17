@@ -135,7 +135,7 @@ exports.searchResourceParams = function (req, res, next, model, resourceId, quer
                 
                 if( definition.search[s].regex )
                 {
-                    queryElement[propName] = new RegExp(definition.search[s].regex.replace("{{value}}",params[definition.id]), definition.search[s].flags );
+                	queryElement[propName] = new RegExp(definition.search[s].regex.replace("{{value}}",params[definition.id]), definition.search[s].flags );
                 }
                 else
                 {
@@ -300,7 +300,6 @@ exports.putResource = function (req, res, next, model, resourceId)
     }
 
     var resource = req.body;
-    console.log( resource );
     
     if (req.params && req.params[0]) 
     {
@@ -312,9 +311,9 @@ exports.putResource = function (req, res, next, model, resourceId)
         )
         .exec
         (
-        	function (arr, data) 
+        	function (err, data) 
         	{
-	            if (data.length > 0) 
+        		if (data.length > 0) 
 	            {
 	                updateData(req.params[0], resource, data[0], req.connection.remoteAddress, res, model);
 	            } 
@@ -423,8 +422,14 @@ var newData = function (uuid, data, remoteAddress, res, model)
     item.entry = entry;
     item.save
     (
-    	function () 
+    	function (err) 
     	{
+    		if( err )
+    		{
+    			res.statusCode = 500;
+    			return res.send( err.message );
+    		}
+    		
     		res.json(item); //TODO, actual response code? How about validation?
     	}
     );

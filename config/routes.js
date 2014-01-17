@@ -1,6 +1,7 @@
 var config = require('./config');
 
 var mongoose = require('mongoose'),
+	ConditionMongooseModel = mongoose.model('Condition'),
 	MedicationMongooseModel = mongoose.model('Medication'),
 	MedicationStatementMongooseModel = mongoose.model('MedicationStatement'),
 	MedicationAdministrationMongooseModel = mongoose.model('MedicationAdministration'),
@@ -9,14 +10,15 @@ var mongoose = require('mongoose'),
 	PatientMongooseModel = mongoose.model('Patient'),
 	PractitionerMongooseModel = mongoose.model('Practitioner'),
 	SubstanceMongooseModel = mongoose.model('Substance'),
-	TrackerStatementMongooseModel = mongoose.model('VitalStatement'),
-	VitalStatementMongooseModel = mongoose.model('TrackerStatement');
+	TrackerStatementMongooseModel = mongoose.model('TrackerStatement'),
+	VitalStatementMongooseModel = mongoose.model('VitalStatement');
 
 module.exports = function(server)
 {
 	//	FHIR
 	var fhir = require('../app/controllers/fhir');
 	//	get all records
+	server.get('/condition/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, ConditionMongooseModel, 'Condition');});
 	server.get('/medication/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, MedicationMongooseModel, 'Medication');});
 	server.get('/medicationadministration/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, MedicationAdministrationMongooseModel, 'MedicationStatement');});
 	server.get('/medicationstatement/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, MedicationStatementMongooseModel, 'MedicationStatement');});
@@ -28,6 +30,7 @@ module.exports = function(server)
 	server.get('/trackerstatement/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
 	server.get('/vitalstatement/history', function(req, res, next){return fhir.getResourceHistory(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
 	//	write new records
+	server.put(/^\/condition\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.putResource(req, res, next, ConditionMongooseModel, 'Condition');});
 	server.put(/^\/medication\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.putResource(req, res, next, MedicationMongooseModel, 'Medication');});
 	server.put(/^\/medicationadministration\/@([a-zA-Z0-9_\.~-]+)/,  function(req, res, next){return fhir.putResource(req, res, next, MedicationAdministrationMongooseModel, 'MedicationAdministration');});
 	server.put(/^\/medicationstatement\/@([a-zA-Z0-9_\.~-]+)/,  function(req, res, next){return fhir.putResource(req, res, next, MedicationStatementMongooseModel, 'MedicationStatement');});
@@ -37,6 +40,7 @@ module.exports = function(server)
 	server.put(/^\/practitioner\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.putResource(req, res, next, PractitionerMongooseModel, 'Practitioner');});
 	server.put(/^\/trackerstatement\/@([a-zA-Z0-9_\.~-]+)/,  function(req, res, next){return fhir.putResource(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
 	server.put(/^\/vitalstatement\/@([a-zA-Z0-9_\.~-]+)/,  function(req, res, next){return fhir.putResource(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
+	server.put('/condition', function(req, res, next){return fhir.putResource(req, res, next, ConditionMongooseModel, 'Condition');});
 	server.put('/medication', function(req, res, next){return fhir.putResource(req, res, next, MedicationMongooseModel, 'Medication');});
 	server.put('/medicationadministration',  function(req, res, next){return fhir.putResource(req, res, next, MedicationAdministrationMongooseModel, 'MedicationAdministration');});
 	server.put('/medicationstatement', function(req, res, next){return fhir.putResource(req, res, next, MedicationStatementMongooseModel, 'MedicationStatement');});
@@ -47,6 +51,14 @@ module.exports = function(server)
 	server.put('/trackerstatement', function(req, res, next){return fhir.putResource(req, res, next, TrackerStatementMongooseModel, 'TrackerStatement');});
 	server.put('/vitalstatement', function(req, res, next){return fhir.putResource(req, res, next, VitalStatementMongooseModel, 'VitalStatement');});
 	//	search
+	server.get('/condition/search', function(req,res,next) {
+	    return fhir.searchResourceParams(
+	                req,res,next,ConditionMongooseModel,'Condition',
+	                [
+	                 {id:"subject",field:"subject.reference.value",search:[{prefix:'patient/@'}]}
+	                ]
+	            );
+	});
 	server.get('/medication/search', function(req,res,next) {
 	    return fhir.searchResourceParams(
 	                req,res,next,MedicationMongooseModel,'Medication',
@@ -130,6 +142,7 @@ module.exports = function(server)
 	    );
 	});
 	//	find specific records
+	server.get(/^\/condition\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.searchResource(req, res, next, ConditionMongooseModel, 'Condition');});
 	server.get(/^\/medication\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.searchResource(req, res, next, MedicationMongooseModel, 'Medication');});
 	server.get(/^\/medicationadministration\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.searchResource(req, res, next, MedicationAdministrationMongooseModel, 'MedicationAdministration');});
 	server.get(/^\/medicationstatement\/@([a-zA-Z0-9_\.~-]+)/, function(req, res, next){return fhir.searchResource(req, res, next, MedicationStatementMongooseModel, 'MedicationStatement');});
@@ -173,5 +186,5 @@ module.exports = function(server)
 	
 	//	DEFINITION
 	var condition = require('../app/controllers/condition');
-	server.get('/condition/search', condition.search);
-}
+	server.get('/conditiondefinition/search', condition.search);
+};

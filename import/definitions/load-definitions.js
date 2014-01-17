@@ -46,8 +46,11 @@ if( fs.existsSync('./definitions') )
 {
     require('./definitions');
 
-    //	clear collection
-    Definition.collection.drop();
+    if( process.argv[2] == "Y" )
+    {
+    	//	clear collection
+    	Definition.collection.drop();
+    }
     
     parseDefinitions();
 }

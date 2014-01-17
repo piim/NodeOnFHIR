@@ -10,7 +10,7 @@ require('../../app/models/fhir');
 require('../../app/models/definition');
 require('../../app/models/condition');
 
-var Condition = mongoose.model('Condition');
+var ConditionDefinition = mongoose.model('ConditionDefinition');
 
 var parseCondition = function(i)
 {
@@ -18,8 +18,11 @@ var parseCondition = function(i)
 	
 	var json = list[i];
     
-	var condition = new Condition();
+	var condition = new ConditionDefinition();
 	condition.name = json.name;
+	condition.code = json.code;
+	condition.codeURI = json.codeURI;
+	condition.codeName = json.codeName;
 	condition.vitals = [];
 	condition.medications = [];
 	condition.customs = [];
@@ -28,7 +31,7 @@ var parseCondition = function(i)
 	
 	for(var prop in json)
 	{
-		if( prop == 'label' ) continue;
+		if( prop == 'name' || prop == 'code' || prop == 'codeName' || prop == 'codeURI' ) continue;
 		if( json[prop] == null ) continue;
 		
 		for(var value in json[prop])
@@ -36,6 +39,8 @@ var parseCondition = function(i)
 			lookups.push( {type:prop,code:json[prop][value].code} );
     	}
 	}
+	
+	var queue = lookups.length;
 	
 	for(var l = 0;l<lookups.length;l++)
 	{
@@ -61,7 +66,9 @@ var parseCondition = function(i)
 						condition[lookup.type].push( data );
 					}
 					
-					if( l == lookups.length - 1)
+					queue--;
+					
+					if( queue == 0 )
 					{
 						condition.save
 						(
@@ -70,7 +77,7 @@ var parseCondition = function(i)
 								if( err )
 									console.log( 'error', err );
 								else
-									console.log( 'condition "' + condition.name + '" saved' );
+									console.log( 'condition "' + condition.name + '" saved',condition );
 								
 								if( i == list.length - 1 )
 									process.exit();
@@ -83,18 +90,21 @@ var parseCondition = function(i)
 						);
 					}	
 				}
-			)
+			);
 		})(l);		
 	}
-}
+};
 
 //	check if data file exists
 if( fs.existsSync('./conditions') )
 {
     require('./conditions');
 
-    //	clear collection
-    Condition.collection.drop();
+    if( process.argv[2] == "Y" )
+    {
+    	//	clear collection
+    	ConditionDefinition.collection.drop();
+    }
     
     parseCondition();
 }

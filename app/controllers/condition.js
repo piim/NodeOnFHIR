@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
 	url = require('url');
 
-var Condition = mongoose.model('Condition');
+var ConditionDefinition = mongoose.model('ConditionDefinition');
 
 exports.search = function(req, res, next) 
 {
@@ -17,7 +17,7 @@ exports.search = function(req, res, next)
 	if( params.name ) 
 		query['name'] = new RegExp('^' + params.name, 'i');
 	
-	Condition.find(query).populate('vitals medications customs').exec
+	ConditionDefinition.find(query).populate('vitals medications customs').exec
     (
     	function (arr, data) 
     	{
