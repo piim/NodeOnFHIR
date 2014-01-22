@@ -427,7 +427,7 @@ var newData = function (uuid, data, remoteAddress, res, model)
     		if( err )
     		{
     			res.statusCode = 500;
-    			return res.send( err.message );
+    			return res.send( {message:err.message} );
     		}
     		
     		res.json(item); //TODO, actual response code? How about validation?

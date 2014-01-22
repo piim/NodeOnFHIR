@@ -104,7 +104,7 @@ list=
 	},
 	{
 		"type":"custom",
-		"label":"driving",
+		"label":"Driving",
 		"actionLabel": "I drove for", 
 		"unit":"hour",
 		"unitLabel":"hours",
