@@ -67,12 +67,12 @@ if( config.authenticate )
                 {
                     var session = data;
                     
-                    if( session.expires.getTime() < Date.now() || !session.user )
+                    if( session.expires.getTime() < Date.now() )
                     {
                     	session.remove();
                     	
-                    	res.statusCode = 404;
-    	            	res.send('Not found');
+                    	res.statusCode = 440;
+    	            	res.send('Session expired');
                     }
                     else
                     {
