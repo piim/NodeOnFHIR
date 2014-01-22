@@ -27,7 +27,7 @@ if( config.authenticate )
 	            if ( data ) 
 	            {
 	                var user = data;
-	                var response = {user:user};
+	                var response = {user:user.toObject()};
 	                var token = jwt.encode({id: user._id}, config.authentication_secret);
 	                
 	                response.id = user._id;
@@ -35,6 +35,10 @@ if( config.authenticate )
 	                
 	                var session = setSession(user,token);
 	                res.send(response);
+	                
+	                //	update last login
+	                user.lastLogin = new Date();
+	                user.save();
 	            } 
 	            else
 	            {
@@ -63,7 +67,7 @@ if( config.authenticate )
                 {
                     var session = data;
                     
-                    if( session.expires.getTime() > Date.now || !session.user )
+                    if( session.expires.getTime() < Date.now() || !session.user )
                     {
                     	session.remove();
                     	
@@ -72,7 +76,7 @@ if( config.authenticate )
                     }
                     else
                     {
-                    	res.send(session);
+                    	res.send(session.toObject());
                     }
                 } 
                 else
