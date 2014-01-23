@@ -14,6 +14,7 @@ exports.search = function(req, res, next)
     
 	var query = {};
 
+	if( params.code ) query['code'] = params.code;
 	if( params.type ) query['type'] = params.type;
 	if( params.label ) query['label'] = new RegExp('^' + params.label, 'i');
 	

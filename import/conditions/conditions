@@ -2,6 +2,9 @@ list=
 [
 	{
 		"name":"Hypertension",
+		"code":"38341003",
+		"codeName":"Hypertensive disorder, systemic arterial (disorder) ",
+		"codeURI":"http://snomed.info",
 		"vitals":
 		[
 			{"comment":"Blood Pressure","code":"55284-4"},
