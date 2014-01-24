@@ -4,7 +4,7 @@ list=
 		"name":"Hypertension",
 		"code":"38341003",
 		"codeName":"Hypertensive disorder, systemic arterial (disorder) ",
-		"codeURI":"http://snomed.info",
+		"codeURI":"http://snomed.info/sct",
 		"vitals":
 		[
 			{"comment":"Blood Pressure","code":"55284-4"},
@@ -18,6 +18,23 @@ list=
 		"medications":
 		[
 			{"comment":"Aspirin","code":"0904-2009"}
+		]
+	},
+	{
+		"name":"Asthma",
+		"code":"195967001",
+		"codeName":"Asthma (disorder)",
+		"codeURI":"http://snomed.info/sct",
+		"vitals":
+		[
+			{"comment":"Peak Flow Rate","code":"313193002"}
+		],
+		"customs":
+		[
+			{"comment":"Asthma Attack","code":"266364000"}
+		],
+		"medications":
+		[
 		]
 	}
 

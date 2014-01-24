@@ -1,5 +1,14 @@
 var mongoose = require('mongoose'), Schema = mongoose.Schema;
 
+var CodeSchema = {value:{type:Schema.Types.Mixed}};
+
+var ValueSchema = {value:{type:Schema.Types.Mixed}};
+
+var CodingSchema = {system:ValueSchema,code:CodeSchema,display:ValueSchema};
+mongoose.model('Coding', CodingSchema);
+
+var CodeableConceptSchema = {coding:[CodingSchema],text:ValueSchema};
+
 //  set schemas matching supported FHIR resource types
 var ConditionSchema = new Schema
 (
@@ -10,25 +19,8 @@ var ConditionSchema = new Schema
 			{
 				Condition:
 				{
-					subject:
-					{
-						reference:
-						{
-							value:{}
-						}
-					},
-					code:
-					{
-						coding: 
-						[
-							{
-								code:
-								{
-									value:{}
-								}
-							}
-						 ]
-					}
+					subject:{reference:ValueSchema},
+					code:CodeableConceptSchema
 				}
 			}
 		}
@@ -109,18 +101,7 @@ var TrackerStatementSchema = new Schema
 							value:{}
 						}
 					},
-					code:
-					{
-						coding: 
-						[
-							{
-								code:
-								{
-									value:{}
-								}
-							}
-						 ]
-					}
+					code:CodeableConceptSchema
 				}
 			}
 		}
@@ -147,18 +128,7 @@ var VitalStatementSchema = new Schema
 							value:{}
 						}
 					},
-					code:
-					{
-						coding: 
-						[
-							{
-								code:
-								{
-									value:{}
-								}
-							}
-						 ]
-					}
+					code:CodeableConceptSchema
 				}
 			}
 		}
