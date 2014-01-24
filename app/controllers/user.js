@@ -6,6 +6,8 @@ var mongoose = require('mongoose'),
 
 var User = mongoose.model('User'),Session = mongoose.model('Session');
 
+var sessionLength = config.session_length ? config.session_length : 60 * 5;
+
 if( config.authenticate ) 
 {
     exports.postAuthenticate = function (req, res, next) 
@@ -56,7 +58,6 @@ if( config.authenticate )
     		res.send('OK');
     	}
     	
-    	console.log( req.body )
     	var query = {token:req.body.token};
     	
     	Session.findOne(query).populate('user').exec
@@ -67,7 +68,8 @@ if( config.authenticate )
                 {
                     var session = data;
                     
-                    if( session.expires.getTime() < Date.now() )
+                    if( sessionLength > 0 
+                    	&& session.expires.getTime() < Date.now() )
                     {
                     	session.remove();
                     	
@@ -76,7 +78,8 @@ if( config.authenticate )
                     }
                     else
                     {
-                    	res.send(session.toObject());
+                    	//	TODO: renew session expiration here?
+                    	res.send( session.toObject() );
                     }
                 } 
                 else
@@ -182,11 +185,17 @@ if( config.authenticate )
 
 var setSession = function(user,token)
 {
-	var minute = 1000 * 60;
-    var hour = minute * 60;
-    
-    var expires = new Date();
-    expires.setTime( expires.getTime() + (minute*5) );
+	var expires;
+	
+	if( sessionLength > 0 )
+	{
+		expires = new Date();
+	    expires.setTime( expires.getTime() + (sessionLength * 1000) );
+	}
+	else
+	{
+		expires = null;
+	}
     
     var query = {user:user.id};
     
