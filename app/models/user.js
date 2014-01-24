@@ -13,9 +13,18 @@ var UserSchema = new Schema
 		created: {
 			type: Date,
 			default: Date.now
+		},
+		lastLogin: {
+			type: Date
 		}
+	},
+	{
+		toJSON: {virtuals:true},
+		toObject: {virtuals:true}
 	}
 );
+
+UserSchema.virtual('isNew').get(function(){ return this.lastLogin == undefined;} );
 
 mongoose.model('User', UserSchema);
 
@@ -28,6 +37,10 @@ var SessionSchema = new Schema
 	    },
 	    token: String,
 	    expires: Date
+	},
+	{
+		toJSON: {virtuals:true},
+		toObject: {virtuals:true}
 	}
 );
 

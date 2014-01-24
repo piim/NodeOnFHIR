@@ -7,3 +7,4 @@ exports.local_port = 8888;
 exports.authenticate = true;   //  whether to enable user authentication (login)
 exports.authorize = true;      //  whether to enable user authorization (controlled access to resources) (only valid if authenticate=true)
 exports.authentication_secret = "xxx";
+exports.session_length = 0;	//	in seconds; set to 0 for none

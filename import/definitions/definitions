@@ -11,7 +11,7 @@ list=
 		"components":
 			[
 				{
-					"inputType":"range",
+					"type":"range",
 					"min":50,
 					"max":500
 				}
@@ -26,21 +26,28 @@ list=
 		"code":"55284-4",
 		"codeName":"Blood pressure systolic and diastolic",
 		"codeURI":"http://loinc.org",
+		"valueLabelDepth":"2",
 		"components":
 			[
 				{
 					"label":"Systolic",
-					"inputType":"text",
+					"type":"range",
 					"code":"8480-6",
 					"codeName":"Systolic blood pressure",
 					"codeURI":"http://loinc.org",
+					"min":80,
+					"max":250,
+					"value":120
 				},
 				{
 					"label":"Diastolic",
-					"inputType":"text",
+					"type":"range",
 					"code":"8462-4",
 					"codeName":"Diastolic blood pressure",
 					"codeURI":"http://loinc.org",
+					"min":60,
+					"max":160,
+					"value":80
 				}
 			],
 		"chart": { "style":"arearange","allowPointSelect":true }
@@ -56,10 +63,10 @@ list=
 		"components":
 			[
 				{
-					"inputType":"range",
+					"type":"range",
 					"min":60,
 					"max":100,
-					"step":"1"
+					"stepSize":"1"
 				}
 			 ],
 		"chart": { "style":"line","allowPointSelect":"false" }
@@ -75,10 +82,10 @@ list=
 		"components":
 			[
 				{
-					"inputType":"range",
+					"type":"range",
 					"min":"10",
 					"max":"60",
-					"step":"1"
+					"stepSize":"1"
 				}
 			 ],
 		"chart": { "style":"line","allowPointSelect":"false" }
@@ -94,24 +101,96 @@ list=
 		"components":
 			[
 				{
-					"inputType":"range",
+					"type":"range",
 					"min":95,
 					"max":105,
-					"step":".1"
+					"stepSize":".1"
+				}
+			 ],
+		"chart": { "style":"line","allowPointSelect":"false" }
+	},
+	{
+		"type":"vital",
+		"label":"Peak Flow Rate", 
+		"actionLabel": "My peak flow was", 
+		"unit": "liters/min", 
+		"code":"313193002",
+		"codeName":"Peak Flow Rate",
+		"codeURI":"http://snomed.info/sct",
+		"components":
+			[
+				{
+					"type":"range",
+					"min":300,
+					"max":680
 				}
 			 ],
 		"chart": { "style":"line","allowPointSelect":"false" }
 	},
 	{
 		"type":"custom",
-		"label":"driving",
+		"label":"Asthma Attack",
+		"code":"266364000",
+		"codeName":"Asthma (disorder)",
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"label": "Severity",
+				"value": "6736007",
+				"type": "select",
+				"codeURI":"http://snomed.info/sct",
+				"values":
+				[
+					{ "code": "255604002", "label": "mild" },
+					{ "code": "6736007", "label": "moderate" },
+					{ "code": "24484000", "label": "severe" }
+				]
+			},
+			{
+				"label": "Symptoms",
+				"value": [],
+				"type": "checkbox",
+				"values":
+				[
+					{ "code": "263731006", "label": "coughing", "codeName": "Coughing (observable entity)" },
+					{ "code": "18197001", "label": "wheezing", "codeName": "Asthmatoid wheeze (finding)" },
+					{ "code": "23924001", "label": "chest tightness", "codeName": "Tight chest (finding)" },
+					{ "code": "248552009", "label": "winded", "codeName": "Winded (finding)" }
+				]
+			},
+			{
+				"label": "Trigger",
+				"type": "checkbox",
+				"value": [],
+				"values":
+				[
+					{ "code": "410980008", "label": "dust", "codeName": "Dust allergen (substance)" },
+					{ "code": "406472009", "label": "animals", "codeName": "Animal dander (substance)" },
+					{ "code": "406470001", "label": "cockroaches", "codeName": "Insect allergen (substance)" },
+					{ "code": "312133006", "label": "viral infection", "codeName": "Viral respiratory infection (disorder)" }
+				]
+			}
+		]
+	},
+	{
+		"type":"custom",
+		"label":"Driving",
 		"actionLabel": "I drove for", 
 		"unit":"hour",
 		"unitLabel":"hours",
-		"value":0,
 		"code":"129060000",
 		"codeName":"Driving (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	},
 	{
 		"type":"custom",
@@ -119,10 +198,18 @@ list=
 		"actionLabel": "I exercised for", 
 		"unit":"hour",
 		"unitLabel":"hours",
-		"value":0,
 		"code":"7934008",
 		"codeName":"Passive physical exercise (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	},
 	{
 		"type":"custom",
@@ -133,7 +220,16 @@ list=
 		"value":0,
 		"code":"35360009",
 		"codeName":"Isometric physical exercise (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	},
 	{
 		"type":"custom",
@@ -141,10 +237,18 @@ list=
 		"actionLabel": "I exercised for", 
 		"unit":"hour",
 		"unitLabel":"hours",
-		"value":0,
 		"code":"86047003",
 		"codeName":"Active physical exercise (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	},
 	
 	{
@@ -155,7 +259,16 @@ list=
 		"unitLabel":"hours",
 		"code":"50360004",
 		"codeName":"Reading (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	},
 	{
 		"type":"custom",
@@ -165,7 +278,16 @@ list=
 		"unitLabel":"hours",
 		"code":"364316005",
 		"codeName":"Sexual intercourse observable (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	},
 	{
 		"type":"custom",
@@ -175,7 +297,16 @@ list=
 		"unitLabel":"hours",
 		"code":"57206007",
 		"codeName":"Singing (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	},
 	{
 		"type":"custom",
@@ -185,7 +316,16 @@ list=
 		"unitLabel":"hours",
 		"code":"129011005",
 		"codeName":"Shopping (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	},
 	{
 		"type":"custom",
@@ -195,7 +335,16 @@ list=
 		"unitLabel":"hours",value:0,
 		"code":"258158006",
 		"codeName":"Sleep, function (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	},
 	{
 		"type":"custom",
@@ -205,7 +354,16 @@ list=
 		"unitLabel":"hours",
 		"code":"288544007",
 		"codeName":"Communicating feelings, function (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	},
 	{
 		"type":"custom",
@@ -215,6 +373,15 @@ list=
 		"unitLabel":"hours",
 		"code":"129013008",
 		"codeName":"Using telephone (observable entity)",
-		"codeURI":"http://snomed.info"
+		"codeURI":"http://snomed.info/sct",
+		"components":
+		[
+			{
+				"value": 0,
+				"type": "range",
+				"min": 0,
+				"max": 24
+			}
+		]
 	}
 ]

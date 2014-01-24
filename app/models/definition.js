@@ -7,9 +7,12 @@ var DefinitionComponentSchema = new Schema
 		code: String,
 		codeName: String,
 		codeURI: String,
-		inputType:String,
+		type:String,
 		min:Number,
-		max:Number
+		max:Number,
+		stepSize:Number,
+		value:{type:Schema.Types.Mixed,default:0},
+		values:[{code:String,label:String,codeName:String}]
 	}
 );
 
@@ -21,6 +24,7 @@ var DefinitionSchema = new Schema
 		actionLabel: String,
 		unit: String,
 		unitLabel: String,
+		valueLabelDepth: {type:Number,default:1},
 		code: String,
 		codeName: String,
 		codeURI: String,
@@ -28,7 +32,5 @@ var DefinitionSchema = new Schema
 		chart: {style:String,allowPointSelect:Boolean,markerEnabled:Boolean}
 	}
 );
-
-DefinitionComponentSchema.virtual('value').get(function(){return 0;});
 
 mongoose.model('Definition', DefinitionSchema);
