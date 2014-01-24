@@ -47,28 +47,32 @@ if( config.authenticate )
     exports.logOut = function(req, res, next) 
     {
     	if ('OPTIONS' == req.method) 
-    		 res.send(203, 'OK');
-    	 
-    	var request = JSON.parse(req.body);
-        var token = req.header('token');
+    	{
+    		res.statusCode = 203;
+    		res.send('OK');
+    	}
+    	console.log("REQ ", req.body);
+    	var token = req.header('token');
         
     	var query = {token:token};
     	
     	console.log("TOKEN ", token, "REQ ", req.body);
     	
-    	Session.findOne(query).execFind
+    	Session.findOne(query).exec
         (
         	function (arr, data) 
         	{
-                if (data && data.length) 
+                if (data) 
                 {                	
-                	var session = data[0];
+                	var session = data;
                 	session.remove();
-                	res.send(203, 'OK');              	                   
+                	res.statusCode = 203;
+                	res.send('OK');            	                   
                 } 
                 else
                 {
-                	res.send(404, 'Not found');
+                	res.statusCode = 404;
+	            	res.send('Not found');
                 } 
         	}
         );
@@ -82,7 +86,6 @@ if( config.authenticate )
     		res.send('OK');
     	}
     	
-    	console.log( req.body )
     	var query = {token:req.body.token};
     	
     	Session.findOne(query).populate('user').exec
@@ -130,13 +133,13 @@ if( config.authenticate )
     	if( req.query.username ) 
     		query['username'] = req.query.username;
     	
-    	Session.findOne(query).exec
+    	User.findOne(query).exec
         (
         	function (arr, data) 
         	{
-                if (data && data.length) 
+                if (data) 
                 {
-                    res.send(data[0]);
+                    res.send(data);
                 } 
                 else
                 {
