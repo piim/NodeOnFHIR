@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 
 var User = mongoose.model('User'),Session = mongoose.model('Session');
 
-var sessionLength = config.session_length ? config.session_length : 60 * 5;
+var sessionLength = config.session_length != undefined ? config.session_length : 60 * 5;
 
 if( config.authenticate ) 
 {
@@ -98,7 +98,7 @@ if( config.authenticate )
         (
         	function (arr, data) 
         	{
-                if (data) 
+        		if (data) 
                 {
                     var session = data;
                     
