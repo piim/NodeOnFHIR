@@ -148,6 +148,18 @@ list=
 				]
 			},
 			{
+				"label": "Location",
+				"type": "radio",
+				"value": "",
+				"codeURI":"http://snomed.info/sct",
+				"values":
+				[
+					{ "code": "310205006", "label": "home" },
+					{ "code": "284438004", "label": "office" },
+					{ "code": "257698009", "label": "school" }
+				]
+			},
+			{
 				"label": "Symptoms",
 				"value": [],
 				"type": "checkbox",
