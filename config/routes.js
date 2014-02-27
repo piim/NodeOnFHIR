@@ -63,7 +63,7 @@ module.exports = function(server)
 	    return fhir.searchResourceParams(
 	                req,res,next,MedicationMongooseModel,'Medication',
 	                [
-	                 {id:"name",field:"name.value",search:[{regex:'^{{value}}.*'},{prefix:''}]},
+	                 {id:"name",field:"name.value",search:[{regex:'^{{value}}.*',flags:'i'}]},
 	                 {id:"code",field:"code.coding.code.value",search:[{regex:'{{value}}',flags:'i'}]}
 	                ]
 	            );
@@ -101,7 +101,7 @@ module.exports = function(server)
 	    return fhir.searchResourceParams(
 	            req,res,next,OrganizationMongooseModel,'Organization',
 	            [
-	             {id:"name",field:"name.value",search:[{regex:'^{{value}}.*'}]}
+	             {id:"name",field:"name.value",search:[{regex:'^{{value}}.*',flags:'i'}]}
 	            ]
 	    );
 	});
@@ -124,6 +124,14 @@ module.exports = function(server)
 	             {id:"given",search:[{field:"name.given.value",regex:'^{{value}}.*',flags:'i'}]}
 	            ]
 	        );
+	});
+	server.get('/substance/search', function(req,res,next) {
+		return fhir.searchResourceParams(
+	    		req,res,next,SubstanceMongooseModel,'Substance',
+	    		[
+	    		 {id:"name",field:"name.value",search:[{regex:'^{{value}}.*',flags:'i'}]}
+	    		 ]
+	    );
 	});
 	server.get('/trackerstatement/search', function(req,res,next) {
 	    return fhir.searchResourceParams(
