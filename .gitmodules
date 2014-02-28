@@ -1,0 +1,3 @@
+[submodule "import/medications"]
+	path = import/medications
+	url = https://github.com/piim/ndc-to-fhir.git
