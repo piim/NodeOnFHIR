@@ -1,16 +1,26 @@
 var http = require('http');
 var fs = require('fs');
+var mongoose = require('mongoose');
 
 //	check if data file exists
 if( fs.existsSync('./' + process.argv[2]) )
 {
     require('./' + process.argv[2]);
-
+    require('../app/models/fhir');
+    
     if (!list.entry)
     {
         process.exit(1);
     }
 
+    if( process.argv[4].toUpperCase() == "Y" )
+    {
+    	var Definition = mongoose.model( process.argv[3].charAt(0).toUpperCase() + process.argv[3].substr(1).toLowerCase() );
+    	
+    	if( Definition )
+    		Definition.collection.drop();
+    }
+    
     for (i = 0; i < list.entry.length; i++)
     {
         if (list.entry[i] != undefined)

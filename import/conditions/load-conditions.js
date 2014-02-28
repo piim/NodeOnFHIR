@@ -100,7 +100,7 @@ if( fs.existsSync('./conditions') )
 {
     require('./conditions');
 
-    if( process.argv[2] == "Y" )
+    if( process.argv[2].toUpperCase() == "Y" )
     {
     	//	clear collection
     	ConditionDefinition.collection.drop();

@@ -46,7 +46,7 @@ if( fs.existsSync('./definitions') )
 {
     require('./definitions');
 
-    if( process.argv[2] == "Y" )
+    if( process.argv[2].toUpperCase() == "Y" )
     {
     	//	clear collection
     	Definition.collection.drop();
