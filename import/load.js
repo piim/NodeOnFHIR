@@ -2,6 +2,10 @@ var http = require('http');
 var fs = require('fs');
 var mongoose = require('mongoose');
 
+var config = require('../config/config');
+var mongo_uri = (process.env.PORT) ? config.creds.mongoose_auth_jitsu : config.creds.mongoose_auth_local;
+var db = mongoose.connect(mongo_uri);
+
 //	check if data file exists
 if( fs.existsSync('./' + process.argv[2]) )
 {
@@ -12,7 +16,7 @@ if( fs.existsSync('./' + process.argv[2]) )
     {
         process.exit(1);
     }
-
+    
     if( process.argv[4].toUpperCase() == "Y" )
     {
     	var Definition = mongoose.model( process.argv[3].charAt(0).toUpperCase() + process.argv[3].substr(1).toLowerCase() );
@@ -21,7 +25,9 @@ if( fs.existsSync('./' + process.argv[2]) )
     		Definition.collection.drop();
     }
     
-    for (i = 0; i < list.entry.length; i++)
+    var requests = list.entry.length - 1;
+    
+    for (var i = 0; i < list.entry.length; i++)
     {
         if (list.entry[i] != undefined)
         {
@@ -59,6 +65,13 @@ if( fs.existsSync('./' + process.argv[2]) )
                 res.on('end', function()
                 {
                     console.log("server response: " + responseString);
+                    
+                    requests -= 1;
+                    
+                    if( requests == 0 )
+                    {
+                    	process.exit();
+                    }
                 });
             });
 
@@ -71,6 +84,8 @@ if( fs.existsSync('./' + process.argv[2]) )
             req.end();
         }
     }
-}else{
+}
+else
+{
     console.log("couldn't find file `" + ('./' + process.argv[2]) + "'");
 }
