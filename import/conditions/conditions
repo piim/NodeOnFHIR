@@ -8,7 +8,7 @@ list=
 		"vitals":
 		[
 			{"comment":"Blood Pressure","code":"55284-4"},
-			{"comment":"Weight","code":"3141-9"},
+			{"comment":"Weight","code":"3141-9"}
 		],
 		"customs":
 		[
@@ -29,6 +29,18 @@ list=
 		[
 			{"comment":"Asthma Attack","code":"266364000"}
 		]
+	},
+{
+		"name":"Alzheimer's",
+		"code":"26929004",
+		"codeName":"Alzheimer's disease (disorder) ",
+		"codeURI":"http://snomed.info/sct",
+		"vitals":
+		[
+			{"comment":"Respiratory Rate","code":"9279-1"},
+			{"comment":"Weight","code":"3141-9"},
+			{"comment":"Blood Pressure","code":"55284-4"},
+			{"comment":"Heart Rate","code":"8867-4"}
+		]
 	}
-
 ]
